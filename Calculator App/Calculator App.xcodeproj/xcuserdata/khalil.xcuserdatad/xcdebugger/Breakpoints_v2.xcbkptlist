@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Calculator App/ViewController.swift"
+            timestampString = "554558876.157429"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "24"
+            endingLineNumber = "24"
+            landmarkName = "ViewController"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Calculator_App.ViewController.InputNumber.getter : weak Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.UITextField&gt;"
+                  moduleName = "Calculator App"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/khalil/Desktop/xcode%20projects/Calculator%20App/Calculator%20App/ViewController.swift"
+                  timestampString = "554497442.213166"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "24"
+                  endingLineNumber = "24"
+                  offsetFromSymbolStart = "79">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Calculator_App.ViewController.InputNumber.setter : weak Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.UITextField&gt;"
+                  moduleName = "Calculator App"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/khalil/Desktop/xcode%20projects/Calculator%20App/Calculator%20App/ViewController.swift"
+                  timestampString = "554497442.228673"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "24"
+                  endingLineNumber = "24"
+                  offsetFromSymbolStart = "86">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Calculator_App.ViewController.init(nibName: Swift.Optional&lt;Swift.String&gt;, bundle: Swift.Optional&lt;__ObjC.Bundle&gt;) -&gt; Calculator_App.ViewController"
+                  moduleName = "Calculator App"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/khalil/Desktop/xcode%20projects/Calculator%20App/Calculator%20App/ViewController.swift"
+                  timestampString = "554497442.235"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "24"
+                  endingLineNumber = "24"
+                  offsetFromSymbolStart = "77">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Calculator_App.ViewController.init(coder: __ObjC.NSCoder) -&gt; Swift.Optional&lt;Calculator_App.ViewController&gt;"
+                  moduleName = "Calculator App"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/khalil/Desktop/xcode%20projects/Calculator%20App/Calculator%20App/ViewController.swift"
+                  timestampString = "554497442.2413369"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "24"
+                  endingLineNumber = "24"
+                  offsetFromSymbolStart = "46">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

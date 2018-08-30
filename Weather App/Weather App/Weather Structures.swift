@@ -37,17 +37,50 @@ struct City : Codable {
     let country : String
 }
 
+
+
+struct Temparetures {
+    var avg : Double
+    var min : Double
+    var max : Double
+    
+    init() {
+        avg  = 0
+        min = 100000
+        max = -100000
+    }
+    
+    init(_avg: Double, _min: Double,_max: Double) {
+        avg = _avg
+        max = _max
+        min = _min
+    }
+    
+     mutating func KelvinToCelsius() {
+        avg = avg - 273.15
+        min = min - 273.15
+        max = max - 273.15
+    }
+}
+
 struct WeatherDay {
-    var temp : Double
-    var MinTemp : Double
-    var MaxTemp : Double
+    var avgTemp : Double
+    var minTemp : Double
+    var maxTemp : Double
     var date : String
    // var icon : String
     
     init() {
-        temp = 0
-        MinTemp = 100000
-        MaxTemp = -100000
+        avgTemp  = 0
+        minTemp = 100000
+        maxTemp = -100000
         date = ""
+    }
+    
+    init(temperature : Temparetures,_date : String) {
+        avgTemp = temperature.avg
+        maxTemp = temperature.max
+        minTemp = temperature.min
+        date = _date
     }
 }

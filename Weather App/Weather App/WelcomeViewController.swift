@@ -23,8 +23,7 @@ import UIKit
 
 class WelcomeViewController: UIViewController {
     
-    var rawData : Data?
-    var DataToView : WeatherDataHandler!
+    var DataToView : WeatherDataHandler?
     @IBOutlet weak var ErrorLabel: UILabel!
     @IBOutlet weak var TextFieldOutlet: UITextField!
     override func viewDidLoad() {
@@ -38,43 +37,33 @@ class WelcomeViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-    }
-    
-    @IBAction func EndEditingAction(_ sender: UITextField) {
-        
-    }
-    
-    
-    @IBAction func SegueAction(_ sender: UIButton) {
-        guard let CityName = TextFieldOutlet.text else {
+
+    @IBAction func EndEditing(_ sender: UITextField) {
+        guard let CityName = sender.text else {
             return
         }
-        
         let BaseURLString = "http://api.openweathermap.org/data/2.5/forecast?q="
-        let KEYString = "&appid=1f6ec271f3da959c1db1575514f66264"
+        let KEYString = "&units=metric&appid=1f6ec271f3da959c1db1575514f66264"
         
         if let FinalURL = URL(string: BaseURLString + CityName + KEYString) {
             print(FinalURL)
-            RequestWeatherData(url: FinalURL)
-            if let datat = rawData {
-                DataToView = WeatherDataHandler(_data: datat)
-                 print(DataToView.CityInfo!)
+            RequestWeatherData(url: FinalURL) {
+                //this excute after handling the callback
+                success in
+                let MainVC = (UIStoryboard(name: "Main",bundle: nil).instantiateViewController(withIdentifier: "MainVC") as! ViewController) //Should define it like this not like: let MainVC = viewController()
+                MainVC.DataToView = self.DataToView
+                self.present(MainVC, animated: true, completion: nil)
             }
-            
-           
         } else {
             print("Melformed URL")
         }
+        
     }
-        
-        
-        func RequestWeatherData(url : URL) {
+    
+    //Send API .. RecieveJSONData..FetchItToObject and save that object
+    func RequestWeatherData(url : URL,completion : @escaping (Bool) -> Void)  {
             let task = URLSession.shared.dataTask(with: url) {
                 (data,_,error) in
-                print("teeeesdt")
                 if let errorRespond = error {
                     print(errorRespond)
                     self.ErrorLabel.text = "Please enter valid city"
@@ -82,21 +71,10 @@ class WelcomeViewController: UIViewController {
                 if let dataResponds = data {
                     print(dataResponds)
                     print("Data Responded Successfully")
-                    // here im trying to send the data to the second VC.. 
-                    let delay = DispatchTime.now() + 1
-                    DispatchQueue.main.asyncAfter(deadline: delay, execute: {
-                        self.rawData = dataResponds
-                        self.DataToView = WeatherDataHandler(_data: dataResponds)
-                        let MainVC = ViewController()
-                        let MaxTempString = String(describing: self.DataToView.TodayData?.MaxTemp)
-                        let MinTempString = String(describing: self.DataToView.TodayData?.MinTemp)
-                        let TempString = String(describing: self.DataToView.TodayData?.temp)
-                        MainVC.CityLabel?.text = self.DataToView.CityInfo
-                        MainVC.TempLabel?.text = TempString
-                        MainVC.MinMaxTempLabel?.text = MaxTempString + "/" + MinTempString
-                        MainVC.DateLabel?.text = self.DataToView.TodayData?.date
-                    })
-                    
+                    self.DataToView = WeatherDataHandler(_data: dataResponds)
+                    let success = (error == nil)
+                    completion(success)
+  
                 }
             }
             task.resume()
@@ -104,5 +82,18 @@ class WelcomeViewController: UIViewController {
         }
         
     }
+
+
+
+
+
+
+/*let MaxTempString = String(describing: self.DataToView.TodayData?.MaxTemp)
+ let MinTempString = String(describing: self.DataToView.TodayData?.MinTemp)
+ let TempString = String(describing: self.DataToView.TodayData?.temp)
+ MainVC.CityLabel?.text = self.DataToView.CityInfo
+ MainVC.TempLabel?.text = TempString
+ MainVC.MinMaxTempLabel?.text = MaxTempString + "/" + MinTempString
+ MainVC.DateLabel?.text = self.DataToView.TodayData?.date*/
    
 

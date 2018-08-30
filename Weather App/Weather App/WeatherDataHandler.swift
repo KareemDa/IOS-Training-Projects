@@ -34,55 +34,49 @@ class WeatherDataHandler {
     }
     
     func PrepareTodayTomorrowData() {
-        //  these to variables will hold all the data and in the last will be assigned to TodayData & TomorrowData
-        var TodayDataTemp = WeatherDay()
-        var TomorrowDataTemp = WeatherDay()
-        // setting the Date with DateHandler Class
-        TodayDataTemp.date = DateHandler.todaysDate
-        TomorrowDataTemp.date = DateHandler.tomorrowsDate
-        var todayCount : Double = 0
-        var TomorrrowCount : Double = 0
         guard let weatherData = weatherJSONData else { return }
-        // Soting the data and calculating min max and avg temp
-        for DataPoint in weatherData.list {
-            var DataPointDate = DataPoint.dt_txt
-            let endIndex = DataPointDate.index(DataPointDate.startIndex, offsetBy: DateHandler.Offset)
-            DataPointDate =  String(DataPointDate[..<endIndex])
+        
+        var TodayTemperaturesList = [Temparetures()]
+        var TomorrowTemperaturesList = [Temparetures()]
+        //sorting data between today and tomorrow
+         for DataPoint in weatherData.list {
+            let DataPointDate = setDateToHndlerDate(Date: DataPoint.dt_txt)
             if DataPointDate == DateHandler.todaysDate {
-                TodayDataTemp.MaxTemp = max(TodayDataTemp.MaxTemp, DataPoint.main.temp_max)
-                TodayDataTemp.MinTemp = min(TodayDataTemp.MinTemp, DataPoint.main.temp_min)
-                TodayDataTemp.temp += DataPoint.main.temp
-                todayCount += 1
+               TodayTemperaturesList.append(Temparetures(_avg: DataPoint.main.temp, _min: DataPoint.main.temp_min, _max: DataPoint.main.temp_max))
             } else if DataPointDate == DateHandler.tomorrowsDate {
-                TomorrowDataTemp.MaxTemp = max(TomorrowDataTemp.MaxTemp, DataPoint.main.temp_max)
-                TomorrowDataTemp.MinTemp = min(TomorrowDataTemp.MinTemp, DataPoint.main.temp_min)
-                TomorrowData?.temp += DataPoint.main.temp
-                TomorrrowCount += 1
+                TomorrowTemperaturesList.append(Temparetures(_avg: DataPoint.main.temp, _min: DataPoint.main.temp_min, _max: DataPoint.main.temp_max))
             }
         }
-        //
-        TomorrowDataTemp.temp /= TomorrrowCount
-        TodayDataTemp.temp /= todayCount
+        //calculating temperatures(average - min - max)
+        var TodayTemperature = Temparetures(_avg: Average(Temp: TodayTemperaturesList), _min: Minimum(Temp: TodayTemperaturesList), _max: Maximum(Temp: TodayTemperaturesList))
+        var TomorrowTemperature = Temparetures(_avg: Average(Temp: TomorrowTemperaturesList), _min: Minimum(Temp: TomorrowTemperaturesList), _max: Maximum(Temp: TomorrowTemperaturesList))
         
-        //converting from kelvin to celisius
-        TodayDataTemp.temp -= 273.15
-        TomorrowDataTemp.temp -= 273.15
-        TodayDataTemp.MinTemp -= 273.15
-        TomorrowDataTemp.MinTemp -= 273.15
-        TodayDataTemp.MaxTemp -= 273.15
-        TomorrowDataTemp.MaxTemp -= 273.15
+        //converting to kelvin
+       /* TodayTemperature.KelvinToCelsius()
+        TomorrowTemperature.KelvinToCelsius()*/
         
-        //taking the round to make it an integer
-        TodayDataTemp.temp = round(10 * TodayDataTemp.temp / 10)
-        TomorrowDataTemp.temp = round(10 * TomorrowDataTemp.temp / 10)
-        TodayDataTemp.MinTemp = round(10 * TodayDataTemp.MinTemp / 10)
-        TomorrowDataTemp.MinTemp = round(10 * TomorrowDataTemp.MinTemp / 10)
-        TodayDataTemp.MaxTemp = round(10 * TodayDataTemp.MaxTemp / 10)
-        TomorrowDataTemp.MaxTemp = round(10 * TomorrowDataTemp.MaxTemp / 10)
         
         //assigning values to the main variables
-        TodayData = TodayDataTemp
-        TomorrowData = TomorrowDataTemp
+        TodayData = WeatherDay(temperature: TodayTemperature, _date: DateHandler.todaysDate)
+        TomorrowData = WeatherDay(temperature: TomorrowTemperature, _date: DateHandler.tomorrowsDate)
+    }
+    
+    func Maximum(Temp : [Temparetures]) -> Double {
+        return Temp.map{$0.max}.max()!
         
     }
+    func Minimum(Temp : [Temparetures]) -> Double {
+        return Temp.map{$0.min}.min()!
+    }
+    
+    func Average(Temp : [Temparetures]) -> Double {
+        return (Temp.map{$0.avg}.reduce(0,+))/Double(Temp.count - 1)
+    }
+    
+    func setDateToHndlerDate(Date: String) -> String {
+        let endIndex = Date.index(Date.startIndex, offsetBy: DateHandler.Offset)
+        return String(Date[..<endIndex])
+    }
+    
+
 }

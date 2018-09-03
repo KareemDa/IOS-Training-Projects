@@ -68,19 +68,23 @@ struct WeatherDay {
     var minTemp : Double
     var maxTemp : Double
     var date : String
-   // var icon : String
+    var icon : String
     
     init() {
         avgTemp  = 0
         minTemp = 100000
         maxTemp = -100000
         date = ""
+        icon = ""
     }
     
-    init(temperature : Temparetures,_date : String) {
+    init(temperature : Temparetures,_date : String,_icon : String) {
         avgTemp = temperature.avg
         maxTemp = temperature.max
         minTemp = temperature.min
         date = _date
+        icon = _icon
     }
+    
+    
 }

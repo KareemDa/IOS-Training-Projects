@@ -36,31 +36,37 @@ class WeatherDataHandler {
     func PrepareTodayTomorrowData() {
         guard let weatherData = weatherJSONData else { return }
         
-        var TodayTemperaturesList = [Temparetures()]
-        var TomorrowTemperaturesList = [Temparetures()]
-        //sorting data between today and tomorrow
-         for DataPoint in weatherData.list {
-            let DataPointDate = setDateToHndlerDate(Date: DataPoint.dt_txt)
-            if DataPointDate == DateHandler.todaysDate {
-               TodayTemperaturesList.append(Temparetures(_avg: DataPoint.main.temp, _min: DataPoint.main.temp_min, _max: DataPoint.main.temp_max))
-            } else if DataPointDate == DateHandler.tomorrowsDate {
-                TomorrowTemperaturesList.append(Temparetures(_avg: DataPoint.main.temp, _min: DataPoint.main.temp_min, _max: DataPoint.main.temp_max))
-            }
-        }
+        //Getting list of todaytomorrow temperatures and icons
+        let TodayTemperaturesIconList = GetTemperatureIconFromDay(weatherData: weatherData, _date: DateHandler.todaysDate)
+        let TomorrowTemperaturesIconList = GetTemperatureIconFromDay(weatherData: weatherData, _date: DateHandler.tomorrowsDate)
+      
         //calculating temperatures(average - min - max)
-        var TodayTemperature = Temparetures(_avg: Average(Temp: TodayTemperaturesList), _min: Minimum(Temp: TodayTemperaturesList), _max: Maximum(Temp: TodayTemperaturesList))
-        var TomorrowTemperature = Temparetures(_avg: Average(Temp: TomorrowTemperaturesList), _min: Minimum(Temp: TomorrowTemperaturesList), _max: Maximum(Temp: TomorrowTemperaturesList))
+        let TodayTemperature = Temparetures(_avg: Average(Temp: TodayTemperaturesIconList.Tempareture), _min: Minimum(Temp: TodayTemperaturesIconList.Tempareture), _max: Maximum(Temp: TodayTemperaturesIconList.Tempareture))
+        let TomorrowTemperature = Temparetures(_avg: Average(Temp: TomorrowTemperaturesIconList.Tempareture), _min: Minimum(Temp: TomorrowTemperaturesIconList.Tempareture), _max: Maximum(Temp: TomorrowTemperaturesIconList.Tempareture))
         
-        //converting to kelvin
-       /* TodayTemperature.KelvinToCelsius()
-        TomorrowTemperature.KelvinToCelsius()*/
-        
-        
+        //Getting the suitable icon
+        let TodayIconString : String = TodayTemperaturesIconList.icon[0]
+        let TomorrowIconString : String = TomorrowTemperaturesIconList.icon[TomorrowTemperaturesIconList.icon.count / 2]
+     
         //assigning values to the main variables
-        TodayData = WeatherDay(temperature: TodayTemperature, _date: DateHandler.todaysDate)
-        TomorrowData = WeatherDay(temperature: TomorrowTemperature, _date: DateHandler.tomorrowsDate)
+        TodayData = WeatherDay(temperature: TodayTemperature, _date: DateHandler.todaysDate,_icon: TodayIconString)
+        TomorrowData = WeatherDay(temperature: TomorrowTemperature, _date: DateHandler.tomorrowsDate,_icon: TomorrowIconString)
     }
     
+    
+    func GetTemperatureIconFromDay(weatherData : WeatherData,_date: String) -> (Tempareture: [Temparetures],icon: [String]) {
+        var Temp : [Temparetures] = []
+        var iconStringList : [String] = []
+        for DataPoint in weatherData.list {
+            if setDateToHndlerDate(Date: DataPoint.dt_txt) == _date {
+                Temp.append(Temparetures(_avg: DataPoint.main.temp, _min: DataPoint.main.temp_min, _max: DataPoint.main.temp_max))
+                iconStringList.append((DataPoint.weather.first?.icon)!)
+            }
+        }
+        return(Temp,iconStringList)
+    }
+    
+
     func Maximum(Temp : [Temparetures]) -> Double {
         return Temp.map{$0.max}.max()!
         
@@ -70,7 +76,7 @@ class WeatherDataHandler {
     }
     
     func Average(Temp : [Temparetures]) -> Double {
-        return (Temp.map{$0.avg}.reduce(0,+))/Double(Temp.count - 1)
+        return (Temp.map{$0.avg}.reduce(0,+))/Double(Temp.count)
     }
     
     func setDateToHndlerDate(Date: String) -> String {

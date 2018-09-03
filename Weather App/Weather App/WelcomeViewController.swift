@@ -29,6 +29,10 @@ class WelcomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Colors.BGColor
+        let defaultCity = UserDefaults.standard.string(forKey: "City")
+        if defaultCity != "" {
+            TextFieldOutlet.text = defaultCity
+        }
         
         // Do any additional setup after loading the view.
     }
@@ -42,12 +46,14 @@ class WelcomeViewController: UIViewController {
         guard let CityName = sender.text else {
             return
         }
+        
+    
         let BaseURLString = "http://api.openweathermap.org/data/2.5/forecast?q="
         let KEYString = "&units=metric&appid=1f6ec271f3da959c1db1575514f66264"
         
         if let FinalURL = URL(string: BaseURLString + CityName + KEYString) {
             print(FinalURL)
-            RequestWeatherData(url: FinalURL) {
+            RequestWeatherData(url: FinalURL,cityName: CityName) {
                 //this excute after handling the callback
                 success in
                 let MainVC = (UIStoryboard(name: "Main",bundle: nil).instantiateViewController(withIdentifier: "MainVC") as! ViewController) //Should define it like this not like: let MainVC = viewController()
@@ -60,8 +66,9 @@ class WelcomeViewController: UIViewController {
         
     }
     
+    
     //Send API .. RecieveJSONData..FetchItToObject and save that object
-    func RequestWeatherData(url : URL,completion : @escaping (Bool) -> Void)  {
+    func RequestWeatherData(url : URL,cityName: String, completion : @escaping (Bool) -> Void)  {
             let task = URLSession.shared.dataTask(with: url) {
                 (data,_,error) in
                 if let errorRespond = error {
@@ -73,6 +80,7 @@ class WelcomeViewController: UIViewController {
                     print("Data Responded Successfully")
                     self.DataToView = WeatherDataHandler(_data: dataResponds)
                     let success = (error == nil)
+                    UserDefaults.standard.set(cityName, forKey: "City") //saveCity
                     completion(success)
   
                 }
@@ -85,15 +93,5 @@ class WelcomeViewController: UIViewController {
 
 
 
-
-
-
-/*let MaxTempString = String(describing: self.DataToView.TodayData?.MaxTemp)
- let MinTempString = String(describing: self.DataToView.TodayData?.MinTemp)
- let TempString = String(describing: self.DataToView.TodayData?.temp)
- MainVC.CityLabel?.text = self.DataToView.CityInfo
- MainVC.TempLabel?.text = TempString
- MainVC.MinMaxTempLabel?.text = MaxTempString + "/" + MinTempString
- MainVC.DateLabel?.text = self.DataToView.TodayData?.date*/
    
 
